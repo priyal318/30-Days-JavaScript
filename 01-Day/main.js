@@ -117,8 +117,8 @@ let filter1=arr7.filter(function(val){
  //use  .reduce()  to find the sum of array
 
  let arr002=[1,2,3,4,5,6];
-  let sum3=arr002.reduce(function(acc,val){
-    return acc+val;
+  let sum3=arr002.reduce(function(accumulator,val){
+    return accumulator+val;
   },0);
 
   //use .find() to get the first number less than 10
