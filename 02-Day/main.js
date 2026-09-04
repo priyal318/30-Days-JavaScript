@@ -1,5 +1,5 @@
 //key-value structure object
-/*let obj={
+let obj={
     name:"priyal",
     age:20,
     lonelyandheartbreak:"yes"
@@ -10,7 +10,7 @@ obj.age;
 
 //deep-structure objects
 
-const user={
+const user4={
     name:"priyal",
     age:20,
     study : {
@@ -39,7 +39,7 @@ console.log(obj2);
 //objectassign same as to copy previous object and its values
 
 let obj3=Object.assign({},study);
-console.log(obj3);*/
+console.log(obj3);
 
 
 let objf={
