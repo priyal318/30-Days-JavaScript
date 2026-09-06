@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 30 — DOM Manipulation | #30DaysJSChallenge</title>
+<style>
+  :root {
+    --bg: #0F1419;
+    --panel: #161D26;
+    --border: #263140;
+    --text: #EDEDE4;
+    --muted: #8A97A6;
+    --blue: #5B8DEF;
+    --green: #7FB88A;
+    --coral: #E8735A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    line-height: 1.6;
+  }
+
+  header {
+    padding: 48px 24px 32px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header .tag {
+    color: var(--blue);
+    font-size: 14px;
+  }
+
+  header h1 {
+    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    font-size: clamp(28px, 5vw, 40px);
+    margin: 8px 0 12px;
+    font-weight: 600;
+  }
+
+  header p {
+    color: var(--muted);
+    max-width: 60ch;
+    font-size: 15px;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .demo {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .demo h2 {
+    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+
+  .demo .desc {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 0 0 18px;
+  }
+
+  .stage {
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    min-height: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 13.5px;
+    background: transparent;
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  button:hover { background: var(--blue); color: var(--bg); }
+
+  button.danger { color: var(--coral); border-color: var(--coral); }
+  button.danger:hover { background: var(--coral); color: var(--bg); }
+
+  button.success { color: var(--green); border-color: var(--green); }
+  button.success:hover { background: var(--green); color: var(--bg); }
+
+  input[type="text"] {
+    font-family: inherit;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 13.5px;
+    flex: 1;
+    min-width: 140px;
+  }
+  input[type="text"]:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+  #box-target {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: var(--blue);
+    transition: transform 0.2s ease, background 0.2s ease, border-radius 0.2s ease;
+  }
+
+  ul#todo-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  ul#todo-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+  }
+
+  ul#todo-list li.done span { text-decoration: line-through; color: var(--muted); }
+
+  ul#todo-list li button {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  #attr-target {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  code.tag-label {
+    color: var(--green);
+    font-size: 12px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    padding-bottom: 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">#30DaysJSChallenge</div>
+  <h1>DOM Manipulation</h1>
+  <p>Six live demos, each backed by a small, self-contained function: selecting elements, editing text and styles, toggling classes, creating and removing nodes, and handling events.</p>
+</header>
+
+<main>
+
+  <section class="demo">
+    <h2>1. Select &amp; edit text</h2>
+    <p class="desc"><code class="tag-label">querySelector</code> + <code class="tag-label">textContent</code></p>
+    <div class="stage">
+      <p id="text-target">Click the button to change this line.</p>
+      <button id="btn-text">Change text</button>
+    </div>
+  </section>
+
+  <section class="demo">
+    <h2>2. Style &amp; class toggling</h2>
+    <p class="desc"><code class="tag-label">style</code> property + <code class="tag-label">classList.toggle</code></p>
+    <div class="stage">
+      <div id="box-target"></div>
+      <button id="btn-style">Toggle shape</button>
+    </div>
+  </section>
+
+  <section class="demo">
+    <h2>3. Create &amp; append elements</h2>
+    <p class="desc"><code class="tag-label">createElement</code> + <code class="tag-label">appendChild</code></p>
+    <div class="stage">
+      <div id="create-target" style="width:100%; display:flex; flex-wrap:wrap; gap:8px;"></div>
+    </div>
+    <div class="stage" style="margin-top:10px;">
+      <button id="btn-create" class="success">Add element</button>
+      <button id="btn-clear" class="danger">Clear all</button>
+    </div>
+  </section>
+
+  <section class="demo">
+    <h2>4. Remove elements</h2>
+    <p class="desc"><code class="tag-label">remove()</code> — click any item below to delete it</p>
+    <div class="stage" id="remove-stage"></div>
+  </section>
+
+  <section class="demo">
+    <h2>5. Attribute manipulation</h2>
+    <p class="desc"><code class="tag-label">setAttribute</code> / <code class="tag-label">getAttribute</code></p>
+    <div class="stage">
+      <span id="attr-target" data-state="off">state: off</span>
+      <button id="btn-attr">Flip state</button>
+    </div>
+  </section>
+
+  <section class="demo">
+    <h2>6. Mini to-do list</h2>
+    <p class="desc">Combines events, creation, class toggling, and removal</p>
+    <div class="stage">
+      <input type="text" id="todo-input" placeholder="Add a task and press Enter">
+      <button id="btn-add-todo" class="success">Add</button>
+    </div>
+    <ul id="todo-list" style="margin-top:12px;"></ul>
+  </section>
+
+</main>
+
+<footer>Day 30 — DOM Manipulation · built for the 30 Days of JavaScript challenge</footer>
+<script src="main.js"></script>
+</body>
+</html>
